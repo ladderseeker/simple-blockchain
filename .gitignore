@@ -1,0 +1,80 @@
+# GoLand IDE specific files
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+
+# Go specific
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories (remove the comment below if you want to check in your vendor directory)
+vendor/
+
+# Go workspace file
+go.work
+
+# Compiled Object files, Static and Dynamic libs
+*.o
+*.a
+
+# Debug files
+debug
+
+# Output directories
+bin/
+dist/
+
+# Local development environment configurations
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+*.log
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*~
+*.tmp
+*.bak
+*.swp
+
+# Go module cache
+/go/pkg/mod/
+
+# GoLand debugger
+.run/
+
+# Test coverage results
+coverage.html
+coverage.txt
+
+# Generated files
+gen/
+
+# Build outputs
+_build/
+build/
