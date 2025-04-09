@@ -78,3 +78,6 @@ gen/
 # Build outputs
 _build/
 build/
+
+tmp/blocks/*
+!tmp/blocks/.gitkeep
