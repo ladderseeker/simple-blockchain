@@ -2,16 +2,29 @@ package blockchain
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/gob"
 	"fmt"
 	"log"
 )
 
 type Block struct {
-	Hash     []byte
-	Data     []byte
-	PrevHash []byte
-	Nonce    int
+	Hash         []byte
+	Transactions []*Transaction
+	PrevHash     []byte
+	Nonce        int
+}
+
+func (b *Block) HashTransactions() []byte {
+	var txHashes [][]byte
+	var txHash [32]byte
+
+	for _, tx := range b.Transactions {
+		txHashes = append(txHashes, tx.ID)
+	}
+	txHash = sha256.Sum256(bytes.Join(txHashes, []byte{}))
+
+	return txHash[:]
 }
 
 func (b *Block) Serialize() []byte {
@@ -33,14 +46,33 @@ func (b *Block) Deserialize(data []byte) *Block {
 func (b *Block) PrintBlock() {
 	fmt.Println("-----------")
 	fmt.Printf("Previous hash: %x\n", b.PrevHash)
-	fmt.Printf("Data: %s\n", b.Data)
+
+	// Print detailed transaction information.
+	fmt.Println("Transactions:")
+	for _, tx := range b.Transactions {
+		fmt.Printf("  Transaction ID: %x\n", tx.ID)
+
+		// Print inputs for the transaction.
+		fmt.Println("  Inputs:")
+		for _, in := range tx.Inputs {
+			fmt.Printf("    - TxInput: ID: %x, Out: %d, Sig: %s\n", in.ID, in.Out, in.Sig)
+		}
+
+		// Print outputs for the transaction.
+		fmt.Println("  Outputs:")
+		for _, out := range tx.Outputs {
+			fmt.Printf("    - TxOutput: Value: %d, PubKey: %s\n", out.Value, out.PubKey)
+		}
+		fmt.Println()
+	}
+
 	fmt.Printf("Hash: %x\n", b.Hash)
 	fmt.Printf("Nonce: %d\n", b.Nonce)
 	fmt.Println("-----------")
 }
 
-func CreateBlock(data string, prevHash []byte) *Block {
-	block := &Block{[]byte{}, []byte(data), prevHash, 0}
+func CreateBlock(txs []*Transaction, prevHash []byte) *Block {
+	block := &Block{[]byte{}, txs, prevHash, 0}
 
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
@@ -52,8 +84,8 @@ func CreateBlock(data string, prevHash []byte) *Block {
 	return block
 }
 
-func Genesis() *Block {
-	return CreateBlock("Genesis Block", []byte{})
+func Genesis(coinbase *Transaction) *Block {
+	return CreateBlock([]*Transaction{coinbase}, []byte{})
 }
 
 func Handle(err error) {
