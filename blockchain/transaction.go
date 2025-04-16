@@ -33,17 +33,6 @@ func (tx *Transaction) IsCoinBase() bool {
 	return len(tx.Inputs) == 1 && len(tx.Inputs[0].ID) == 0 && tx.Inputs[0].Out == -1
 }
 
-type TxInput struct {
-	ID  []byte
-	Out int
-	Sig string
-}
-
-type TxOutput struct {
-	Value  int
-	PubKey string
-}
-
 func CoinbaseTx(toAddress, data string) *Transaction {
 	if data == "" {
 		data = fmt.Sprintf("Coins to %s", toAddress)
@@ -53,20 +42,6 @@ func CoinbaseTx(toAddress, data string) *Transaction {
 	txOut := TxOutput{reward, toAddress}
 
 	return &Transaction{nil, []TxInput{txIn}, []TxOutput{txOut}}
-}
-
-func (in *TxInput) CanUnLock(data string) bool {
-	return in.Sig == data
-}
-
-func (out *TxOutput) CanBeUnLocked(data string) bool {
-	return out.PubKey == data
-}
-
-type UTXO struct {
-	TxID   string
-	OutIdx int
-	OutPut TxOutput
 }
 
 func NewTransaction(from, to string, amount int, chain *Blockchain) *Transaction {

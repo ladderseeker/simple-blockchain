@@ -79,5 +79,5 @@ gen/
 _build/
 build/
 
-tmp/blocks/*
+tmp/*
 !tmp/blocks/.gitkeep
