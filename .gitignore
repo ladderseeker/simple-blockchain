@@ -81,3 +81,5 @@ build/
 
 tmp/*
 !tmp/blocks/.gitkeep
+
+/simple-blockchain
